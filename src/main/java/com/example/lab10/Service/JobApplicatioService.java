@@ -1,41 +1,55 @@
 package com.example.lab10.Service;
 
-
-import com.example.lab10.Model.JobApplication;
-import com.example.lab10.Repository.JobApplicationRepository;
+import com.example.lab10.Model.JobPost;
+import com.example.lab10.Repository.JobPostRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class JobApplicatioService {
+public class JobPostService {
 
-    private final JobApplicationRepository jobApplicationRepository;
+    public final JobPostRepository jobPostRepository;
 
-    public JobApplicatioService(JobApplicationRepository jobApplicationRepository) {
-        this.jobApplicationRepository = jobApplicationRepository;
+    public JobPostService(JobPostRepository jobPostRepository) {
+        this.jobPostRepository = jobPostRepository;
     }
 
-    public boolean addApplication(@Valid JobApplication jobApplication){
-        jobApplicationRepository.save(jobApplication);
+    //add new job
+    public Boolean addjob( JobPost jobPost){
+        jobPostRepository.save(jobPost);
         return true;
     }
 
-    public List<JobApplication> getallApplication(){
-        return jobApplicationRepository.findAll();
+    //get all jobs posted
+    public List<JobPost> getalljobs(){
+        return  jobPostRepository.findAll();
     }
 
-    public boolean deleteApplocation(int id){
-        JobApplication oldApplication=jobApplicationRepository.getReferenceById(id);
+    //update job posted
 
-        if (oldApplication.getId()==id){
-            jobApplicationRepository.delete(oldApplication);
-            return true;
+    public boolean updatejob(int id,JobPost jobPost){
+        JobPost oldjob=jobPostRepository.getReferenceById(id);
+        if (oldjob==null){
+            return false;
         }
-        return false;
+        oldjob.setTitle(jobPost.getTitle());
+        oldjob.setDescription(jobPost.getDescription());
+        oldjob.setPostingDate(jobPost.getPostingDate());
 
-
-
+        jobPostRepository.save(oldjob);
+        return true;
     }
+
+    //delete job posted
+    public Boolean deletejob(int id){
+        JobPost oldjob=jobPostRepository.getReferenceById(id);
+        if (oldjob==null){
+            return false;
+        }
+        jobPostRepository.delete(oldjob);
+        return true;
+    }
+
 }
